@@ -77,6 +77,17 @@ class Validator
                 }
                 break;
 
+            case 'numeric':
+                if (
+                    $value !== null &&
+                    (is_string($value) && trim($value) !== '') &&
+                    !is_numeric($value)
+                ) {
+                    $this->errors[$field][] =
+                        'Ce champ doit être un nombre.';
+                }
+                break;
+
             case 'email':
                 if (
                     $value !== null &&
