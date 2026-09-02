@@ -111,4 +111,14 @@ class ItemRepository
 
         return $item;
     }
+
+    /**
+     * Supprime un item par son ID.
+     */
+    public function deleteById(int $id): bool
+    {
+        $stmt = $this->pdo->prepare('DELETE FROM items WHERE id = :id');
+
+        return $stmt->execute(['id' => $id]);
+    }
 }

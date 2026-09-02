@@ -56,7 +56,7 @@ $baseUrl = $baseUrl === '/' ? '' : $baseUrl;
 
             <?php foreach ($items as $item): ?>
 
-                <div class="col-md-6 col-lg-4">
+                <div class="col-md-6 col-lg-4" data-item-card="<?= $item->getId() ?>">
 
                     <div class="card h-100 shadow-sm">
 
@@ -82,13 +82,20 @@ $baseUrl = $baseUrl === '/' ? '' : $baseUrl;
                         </div>
 
                         <div class="card-footer bg-white border-0">
-                            <small class="text-muted">
-                                ID : <?= $item->getId() ?>
-                                <?php if ($item->getCreatedAt()): ?>
-                                    &middot; Ajouté le
-                                    <?= (new DateTime($item->getCreatedAt()))->format('d/m/Y') ?>
-                                <?php endif; ?>
-                            </small>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    ID : <?= $item->getId() ?>
+                                    <?php if ($item->getCreatedAt()): ?>
+                                        &middot; Ajouté le
+                                        <?= (new DateTime($item->getCreatedAt()))->format('d/m/Y') ?>
+                                    <?php endif; ?>
+                                </small>
+
+                                <form class="delete-form" action="<?= $baseUrl ?>/items/delete" method="POST">
+                                    <input type="hidden" name="id" value="<?= $item->getId() ?>">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                </form>
+                            </div>
                         </div>
 
                     </div>
@@ -111,7 +118,7 @@ $baseUrl = $baseUrl === '/' ? '' : $baseUrl;
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
             </div>
 
-            <form action="<?= $baseUrl ?>/" method="POST" novalidate>
+            <form id="create-item-form" action="<?= $baseUrl ?>/" method="POST" novalidate>
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="name" class="form-label">Nom</label>
@@ -157,6 +164,51 @@ $baseUrl = $baseUrl === '/' ? '' : $baseUrl;
     new bootstrap.Modal(document.getElementById('createItemModal')).show();
 </script>
 <?php endif; ?>
+
+<script>
+    document.getElementById('create-item-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const form = event.currentTarget;
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
+        });
+
+        if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
+            const result = await response.json();
+
+            if (result.success) {
+                window.location.reload();
+            }
+        } else {
+            document.open();
+            document.write(await response.text());
+            document.close();
+        }
+    });
+
+    document.querySelectorAll('.delete-form').forEach((form) => {
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            if (!confirm('Supprimer cet item ?')) {
+                return;
+            }
+
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {'X-Requested-With': 'XMLHttpRequest'}
+            });
+
+            if (response.ok) {
+                form.closest('[data-item-card]').remove();
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
