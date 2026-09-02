@@ -10,6 +10,7 @@ $router = new Router();
 
 // 3. Définition des routes de l'application
 $router->add('GET', '/', 'ItemController@index');
+$router->add('POST', '/', 'ItemController@store');
 $router->add('GET', '/items/create', 'ItemController@create');
 $router->add('POST', '/items/store', 'ItemController@store');
 
