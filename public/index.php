@@ -13,6 +13,7 @@ $router->add('GET', '/', 'ItemController@index');
 $router->add('POST', '/', 'ItemController@store');
 $router->add('GET', '/items/create', 'ItemController@create');
 $router->add('POST', '/items/store', 'ItemController@store');
+$router->add('POST', '/items/delete', 'ItemController@destroy');
 
 // 4. Traitement de la requête entrante
 $requestPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';

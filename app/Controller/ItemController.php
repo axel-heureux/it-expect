@@ -66,11 +66,42 @@ class ItemController
         ]);
 
         $this->repository->save($item);
+
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true]);
+            return;
+        }
+
         $items = $this->repository->findAll();
         $errors = [];
         $old = [];
         $showCreateModal = false;
         $success = 'L\'item a bien été ajouté.';
+
+        require __DIR__ . '/../View/items/form.php';
+    }
+
+    public function destroy(): void
+    {
+        $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+
+        if ($id !== false && $id !== null && $id > 0) {
+            $this->repository->deleteById($id);
+
+            if (isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => true]);
+                return;
+            }
+
+            $success = 'L\'item a bien été supprimé.';
+        }
+
+        $items = $this->repository->findAll();
+        $errors = [];
+        $old = [];
+        $showCreateModal = false;
 
         require __DIR__ . '/../View/items/form.php';
     }
