@@ -3,7 +3,10 @@
     "description": "testing repository",
     "autoload": {
         "psr-4": {
-            "Aheureux\\ItExpect\\": "src/"
+            "Aheureux\\ItExpect\\": "src/",
+            "Core\\": "Core/",
+            "Controller\\": "app/Controller/",
+            "Model\\": "app/Model/"
         }
     },
     "require-dev": {
