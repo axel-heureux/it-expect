@@ -35,7 +35,7 @@ class Validator
      */
     private function applyRule(
         string $field,
-        mixed $value,
+        $value,
         string $rule
     ): void {
         // Règle avec paramètre : maxLength:100
