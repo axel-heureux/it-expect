@@ -21,7 +21,7 @@ jobs:
           --health-retries=3
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Configuration de PHP
         uses: shivammathur/setup-php@v2
@@ -32,6 +32,26 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 
+      - name: Configuration de la base de données
+        run: |
+          printf "DB_HOST=127.0.0.1\nDB_NAME=it_expect\nDB_USER=root\nDB_PASSWORD=root\n" > .env
+          mysql -h 127.0.0.1 -P 3306 -u root -proot it_expect -e "CREATE TABLE items (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL, price DECIMAL(10,2) NOT NULL, stock INT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);"
+
       # PHPUnit lira automatiquement le phpunit.xml à la racine !
       - name: Run PHPUnit
         run: vendor/bin/phpunit
+
+      - name: Configuration de Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install Cypress dependencies
+        run: npm ci
+
+      - name: Start PHP server
+        run: php -S 127.0.0.1:8080 -t public > /tmp/php-server.log 2>&1 &
+
+      - name: Run Cypress E2E
+        run: npm run test:e2e -- --config baseUrl=http://127.0.0.1:8080
