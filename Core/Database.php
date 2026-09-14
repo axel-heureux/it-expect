@@ -2,6 +2,7 @@
 
 namespace Core;
 
+use Dotenv\Dotenv;
 use PDO;
 use PDOException;
 
@@ -12,10 +13,12 @@ class Database
     public static function getConnection(): PDO
     {
         if (self::$pdo === null) {
-            $host = 'localhost';
-            $dbname = 'it-expect';
-            $user = 'root';
-            $password = '';
+            Dotenv::createImmutable(dirname(__DIR__))->safeLoad();
+
+            $host = $_ENV['DB_HOST'] ?? 'localhost';
+            $dbname = $_ENV['DB_NAME'] ?? 'it-expect';
+            $user = $_ENV['DB_USER'] ?? 'root';
+            $password = $_ENV['DB_PASSWORD'] ?? '';
 
             try {
                 self::$pdo = new PDO(
