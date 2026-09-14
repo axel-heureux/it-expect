@@ -1,1 +1,1 @@
-{"version":1,"defects":[],"times":{"Tests\\Integration\\Core\\CardDatabaseTest::testItemsTableStartsEmpty":0.026,"Tests\\Unit\\Core\\ValidatorTest::testRequiredFieldFailsWhenEmpty":0.001}}
+{"version":1,"defects":[],"times":{"Tests\\Integration\\Core\\CardDatabaseTest::testItemsTableStartsEmpty":0.017,"Tests\\Unit\\Core\\ValidatorTest::testRequiredFieldFailsWhenEmpty":0.003}}
