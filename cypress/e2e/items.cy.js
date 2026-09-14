@@ -64,9 +64,12 @@ describe('Gestion des items', () => {
         openCreateModal();
         fillCreateForm(name, '2', '1');
 
-        cy.contains('[data-item-card]', name).as('itemCard');
+        cy.intercept('POST', '**/items/delete').as('deleteItem');
         cy.on('window:confirm', () => true);
-        cy.get('@itemCard').find('.delete-form').submit();
-        cy.get('@itemCard').should('not.exist');
+        cy.contains('[data-item-card]', name)
+            .find('.delete-form button[type="submit"]')
+            .click();
+        cy.wait('@deleteItem').its('response.statusCode').should('eq', 200);
+        cy.contains('[data-item-card]', name).should('not.exist');
     });
 });
