@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "cypress": "^15.21.1"
+  },
+  "scripts": {
+    "test:e2e": "cypress run"
   }
 }
