@@ -12,4 +12,6 @@
 		</testsuite>
 	</testsuites>
 </phpunit>
+
+<!-- Test Configuration -->
     
